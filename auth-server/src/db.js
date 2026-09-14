@@ -1,31 +1,33 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import pg from 'pg';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { Pool } = pg;
 
-// файл базы данных лежит рядом с проектом
-const db = new Database(path.join(__dirname, '..', 'data.sqlite'));
-db.pragma('journal_mode = WAL');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // нужно для подключения к Supabase
+});
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name TEXT,
-    last_name TEXT,
-    phone TEXT UNIQUE NOT NULL,
-    password_hash TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  );
+export async function initDb() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      first_name TEXT,
+      last_name TEXT,
+      phone TEXT UNIQUE NOT NULL,
+      password_hash TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
 
-  CREATE TABLE IF NOT EXISTS reset_codes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    phone TEXT NOT NULL,
-    code TEXT NOT NULL,
-    expires_at TEXT NOT NULL,
-    used INTEGER DEFAULT 0,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  );
-`);
+    CREATE TABLE IF NOT EXISTS reset_codes (
+      id SERIAL PRIMARY KEY,
+      phone TEXT NOT NULL,
+      code TEXT NOT NULL,
+      expires_at TIMESTAMP NOT NULL,
+      used BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+  `);
+  console.log('DB ready');
+}
 
-export default db;
+export default pool;
