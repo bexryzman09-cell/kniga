@@ -14,7 +14,7 @@ export default function Register() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError('');
-        setLoading(true);
+        setLoading(true);   
         try {
             await api.register(firstName, lastName, phone);
             navigate('/security'); // здесь пользователь ставит пароль в первый раз

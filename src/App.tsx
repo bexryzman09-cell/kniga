@@ -12,6 +12,8 @@ import ConfirmCodePages from "./pages/Confirmcodepages"
 import SecurityPages from "./pages/SecurityPages"
 import ScrollToTop from "./components/ScrollToTop";
 import LibraryPages from "./pages/LibraryPages"
+import BookDetail from "./components/BookDetail"
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
         <Route path="/confirm-code" element={<ConfirmCodePages />} />
         <Route path="/security" element={<SecurityPages />} />
         <Route path="/library" element={<LibraryPages />} />
+        <Route path="/book/:id" element={<BookDetail />} />
         <Route path="*" element={<NotFoundPages />} />
 
       </Routes>

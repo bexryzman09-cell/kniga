@@ -10,7 +10,7 @@ export const BOOKS = [
         rating: 8.7,
         price: 450,
         currency: 'руб',
-        status: 'sale',
+        status: 'sale', 
         genres: ['Романтика', 'Комедия', 'Школа'],
         description: 'История двух гениальных школьников, которые играют психологические игры, пытаясь заставить друг друга признаться в любви.',
         descriptionEn: 'The story of two brilliant students who play psychological games trying to make each other confess their love first.',
